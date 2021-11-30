@@ -133,7 +133,7 @@ void gui_init()
 
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
-    io.Fonts->AddFontFromFileTTF("$PKG_BUILD/retroarch-assets-56cf794f0267f8ac85b678b049075e8fe51964d0/ozone/regular.ttf", 13.0f, NULL, io.Fonts->GetGlyphRangesChineseSimplifiedCommon());
+    io.Fonts->AddFontFromFileTTF("../../fonts/regular.ttf", 13.0f, NULL, io.Fonts->GetGlyphRangesChineseSimplifiedCommon());
     //ImGui::StyleColorsClassic();
     ImGui::GetStyle().TabRounding = 0;
     ImGui::GetStyle().ItemSpacing = ImVec2(8, 8);		// from 8,4
