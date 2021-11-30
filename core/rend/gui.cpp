@@ -102,6 +102,7 @@ void gui_init()
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	ImFont* font = io.Fonts->AddFontFromFileTTF("/home/peng/huitui/fonts/regular.ttf", 13.0f, NULL, io.Fonts->GetGlyphRangesChineseFull());
 
 	io.IniFilename = NULL;
 
@@ -132,6 +133,7 @@ void gui_init()
 
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
+    io.Fonts->AddFontFromFileTTF("/home/peng/huitui/fonts/regular.ttf", 13.0f, NULL, io.Fonts->GetGlyphRangesChineseSimplifiedCommon());
     //ImGui::StyleColorsClassic();
     ImGui::GetStyle().TabRounding = 0;
     ImGui::GetStyle().ItemSpacing = ImVec2(8, 8);		// from 8,4
@@ -469,7 +471,7 @@ static void gui_display_commands()
         ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
         ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
 	}
-	if (ImGui::Button("Load State", ImVec2(110 * scaling, 50 * scaling)))
+	if (ImGui::Button("即时读档", ImVec2(110 * scaling, 50 * scaling)))
 	{
 		gui_state = GuiState::Closed;
 		dc_loadstate(config::SavestateSlot);
@@ -489,7 +491,7 @@ static void gui_display_commands()
         ImGui::EndPopup();
     }
 	ImGui::SameLine();
-	if (ImGui::Button("Save State", ImVec2(110 * scaling, 50 * scaling)))
+	if (ImGui::Button("即时存档", ImVec2(110 * scaling, 50 * scaling)))
 	{
 		gui_state = GuiState::Closed;
 		dc_savestate(config::SavestateSlot);
@@ -500,20 +502,20 @@ static void gui_display_commands()
         ImGui::PopStyleVar();
 	}
 
-	ImGui::Columns(2, "buttons", false);
-	if (ImGui::Button("Settings", ImVec2(150 * scaling, 50 * scaling)))
+	ImGui::Columns(2, "按键", false);
+	if (ImGui::Button("设置", ImVec2(150 * scaling, 50 * scaling)))
 	{
 		gui_state = GuiState::Settings;
 	}
 	ImGui::NextColumn();
-	if (ImGui::Button("Resume", ImVec2(150 * scaling, 50 * scaling)))
+	if (ImGui::Button("继续", ImVec2(150 * scaling, 50 * scaling)))
 	{
 		GamepadDevice::load_system_mappings();
 		gui_state = GuiState::Closed;
 	}
 
 	ImGui::NextColumn();
-	const char *disk_label = libGDR_GetDiscType() == Open ? "Insert Disk" : "Eject Disk";
+	const char *disk_label = libGDR_GetDiscType() == Open ? "插入光盘" : "弹出光盘";
 	if (ImGui::Button(disk_label, ImVec2(150 * scaling, 50 * scaling)))
 	{
 		if (libGDR_GetDiscType() == Open)
@@ -527,12 +529,12 @@ static void gui_display_commands()
 		}
 	}
 	ImGui::NextColumn();
-	if (ImGui::Button("Cheats", ImVec2(150 * scaling, 50 * scaling)))
+	if (ImGui::Button("金手指", ImVec2(150 * scaling, 50 * scaling)))
 	{
 		gui_state = GuiState::Cheats;
 	}
 	ImGui::Columns(1, nullptr, false);
-	if (ImGui::Button("Exit", ImVec2(300 * scaling + ImGui::GetStyle().ColumnsMinSpacing + ImGui::GetStyle().FramePadding.x * 2 - 1,
+	if (ImGui::Button("退出", ImVec2(300 * scaling + ImGui::GetStyle().ColumnsMinSpacing + ImGui::GetStyle().FramePadding.x * 2 - 1,
 			50 * scaling)))
 	{
 		gui_stop_game();
@@ -1074,7 +1076,7 @@ static void gui_display_settings()
 		        ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
 		        ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
 			}
-			if (ImGui::BeginCombo("Cable", cable[config::Cable == 0 ? 0 : config::Cable - 1], ImGuiComboFlags_None))
+			if (ImGui::BeginCombo("缆线", cable[config::Cable == 0 ? 0 : config::Cable - 1], ImGuiComboFlags_None))
 			{
 				for (int i = 0; i < IM_ARRAYSIZE(cable); i++)
 				{
@@ -1092,7 +1094,7 @@ static void gui_display_settings()
 		        ImGui::PopStyleVar();
 			}
             ImGui::SameLine();
-            ShowHelpMarker("Video connection type");
+            ShowHelpMarker("视频连接类型");
 
 #if !defined(TARGET_IPHONE)
             ImVec2 size;
@@ -1147,21 +1149,21 @@ static void gui_display_settings()
                 ImGui::ListBoxFooter();
             }
             ImGui::SameLine();
-            ShowHelpMarker("保存Flycast配置文件与VMU的目录, BIOS文件应该放入一个名为“data”的子文件夹中");
+            ShowHelpMarker("包含BIOS文件以及保存的VMU和状态的目录");
 #else
             if (ImGui::ListBoxHeader("主目录", 1))
             {
             	ImGui::AlignTextToFramePadding();
                 ImGui::Text("%s", get_writable_config_path("").c_str());
 #ifdef __ANDROID__
-                ImGui::SameLine(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize("Change").x - ImGui::GetStyle().FramePadding.x);
-                if (ImGui::Button("Change"))
+                ImGui::SameLine(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize("变更").x - ImGui::GetStyle().FramePadding.x);
+                if (ImGui::Button("变更"))
                 	gui_state = GuiState::Onboarding;
 #endif
                 ImGui::ListBoxFooter();
             }
             ImGui::SameLine();
-            ShowHelpMarker("The directory where Flycast saves configuration files and VMUs. BIOS files should be in a subfolder named \"data\"");
+            ShowHelpMarker("保存Flycast配置文件与VMU的目录, BIOS文件应该放入一个名为 \"data\" 的子文件夹中");
 #endif // !linux
 #endif // !TARGET_IPHONE
 
@@ -1169,11 +1171,11 @@ static void gui_display_settings()
 					"浏览文件时隐藏 .bin .dat .lst文件"))
 				scanner.refresh();
 	    	ImGui::Text("自动即使读档/存档:");
-			OptionCheckbox("Load", config::AutoLoadState,
-					"Load the last saved state of the game when starting");
+			OptionCheckbox("读档", config::AutoLoadState,
+					"启动时自动读档");
 			ImGui::SameLine();
-			OptionCheckbox("Save", config::AutoSaveState,
-					"退出时自动存档, 启动时自动读档");
+			OptionCheckbox("存档", config::AutoSaveState,
+					"退出时自动存档 ");
 
 			ImGui::PopStyleVar();
 			ImGui::EndTabItem();
@@ -2097,13 +2099,13 @@ static void gui_display_loadscreen()
 			else
 			{
 				gui_state = GuiState::Closed;
-				ImGui::Text("STARTING...");
+				ImGui::Text("启动中...");
 			}
 		} catch (const FlycastException& ex) {
 			ERROR_LOG(BOOT, "%s", ex.what());
 			error_msg = ex.what();
 #ifdef TEST_AUTOMATION
-			die("Game load failed");
+			die("游戏加载失败");
 #endif
 			gui_state = GuiState::Main;
 			settings.imgread.ImagePath[0] = '\0';
@@ -2111,14 +2113,14 @@ static void gui_display_loadscreen()
 	}
 	else
 	{
-		ImGui::Text("LOADING... ");
+		ImGui::Text("加载中... ");
 		ImGui::SameLine();
 		ImGui::Text("%s", get_notification().c_str());
 
 		float currentwidth = ImGui::GetContentRegionAvail().x;
 		ImGui::SetCursorPosX((currentwidth - 100.f * scaling) / 2.f + ImGui::GetStyle().WindowPadding.x);
 		ImGui::SetCursorPosY(126.f * scaling);
-		if (ImGui::Button("Cancel", ImVec2(100.f * scaling, 0.f)))
+		if (ImGui::Button("取消", ImVec2(100.f * scaling, 0.f)))
 		{
 			dc_cancel_load();
 			gui_state = GuiState::Main;
@@ -2186,7 +2188,7 @@ void gui_display_ui()
 		gui_cheats();
 		break;
 	default:
-		die("Unknown UI state");
+		die("未知的用户界面状态");
 		break;
 	}
     ImGui::Render();
