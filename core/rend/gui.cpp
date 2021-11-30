@@ -132,7 +132,7 @@ void gui_init()
 
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
-    ImFont* font = io.Fonts->AddFontFromFileTTF("/home/pp/fonts/regular.ttf", 15.0f, NULL, io.Fonts->GetGlyphRangesChineseFull());
+    ImFont* font = io.Fonts->AddFontFromFileTTF("fonts/regular.ttf", 15.0f, NULL, io.Fonts->GetGlyphRangesChineseFull());
     //ImGui::StyleColorsClassic();
     ImGui::GetStyle().TabRounding = 0;
     ImGui::GetStyle().ItemSpacing = ImVec2(8, 8);		// from 8,4
