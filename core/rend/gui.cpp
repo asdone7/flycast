@@ -249,10 +249,10 @@ void gui_init()
         		|| locale.find("zh_HK") == 0)	// Traditional Chinese
         	glyphRanges = GetGlyphRangesChineseTraditionalOfficial();
         else if (locale.find("zh_CN") == 0)		// Simplified Chinese
-        	glyphRanges = GetGlyphRangesChineseSimplifiedOfficial();
+        	glyphRanges = GetGlyphRangesChineseFull();
 
         if (glyphRanges != nullptr)
-        	io.Fonts->AddFontFromFileTTF("/system/fonts/NotoSansCJK-Regular.ttc", 17.f * scaling, &font_cfg, glyphRanges);
+        	io.Fonts->AddFontFromFileTTF("fonts/regular.ttf", 17.f * scaling, &font_cfg, glyphRanges);
     }
 
     // TODO Linux, iOS, ...
