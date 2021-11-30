@@ -252,7 +252,7 @@ void gui_init()
         	glyphRanges = GetGlyphRangesChineseFull();
 
         if (glyphRanges != nullptr)
-        	io.Fonts->AddFontFromFileTTF("fonts/regular.ttf", 17.f * scaling, &font_cfg, glyphRanges);
+        	ImFont* font = io.Fonts->AddFontFromFileTTF("fonts/regular.ttf", 17.0f * scaling, &font_cfg, glyphRanges, io.Fonts->GetGlyphRangesChineseFull());
     }
 
     // TODO Linux, iOS, ...
