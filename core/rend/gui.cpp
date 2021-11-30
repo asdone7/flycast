@@ -215,7 +215,7 @@ void gui_init()
     	break;
     }
 #elif defined(__APPLE__) && !defined(TARGET_IPHONE)
-    std::string fontDir = std::string("/System/Library/Fonts/");
+    std::string fontDir = std::string("Fonts/");
     
     extern std::string os_Locale();
     std::string locale = os_Locale();
@@ -234,7 +234,7 @@ void gui_init()
     }
     else if (locale.find("zh-Hans") == 0)  // Simplified Chinese
     {
-        io.Fonts->AddFontFromFileTTF((fontDir + "PingFang.ttc").c_str(), 17.f * scaling, &font_cfg, GetGlyphRangesChineseSimplifiedOfficial());
+        io.Fonts->AddFontFromFileTTF((fontDir + "regular.ttf").c_str(), 17.f * scaling, &font_cfg, GetGlyphRangesChineseSimplifiedOfficial());
     }
 #elif defined(__ANDROID__)
     if (getenv("FLYCAST_LOCALE") != nullptr)
@@ -252,7 +252,7 @@ void gui_init()
         	glyphRanges = GetGlyphRangesChineseFull();
 
         if (glyphRanges != nullptr)
-        	ImFont* font = io.Fonts->AddFontFromFileTTF("fonts/regular.ttf", 17.0f * scaling, &font_cfg, glyphRanges, io.Fonts->GetGlyphRangesChineseFull());
+        	ImFont* font = io.Fonts->AddFontFromFileTTF("fonts/regular.ttf", 17.0f * scaling, &font_cfg, glyphRanges, GetGlyphRangesChineseFull());
     }
 
     // TODO Linux, iOS, ...
