@@ -102,6 +102,7 @@ void gui_init()
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	io.Fonts->AddFontFromFileTTF("regular.ttf", 15.0f, NULL, io.Fonts->GetGlyphRangesChineseFull());
 
 	io.IniFilename = NULL;
 
@@ -214,7 +215,7 @@ void gui_init()
     	break;
     }
 #elif defined(__APPLE__) && !defined(TARGET_IPHONE)
-    std::string fontDir = std::string("Fonts/");
+    std::string fontDir = std::string("/System/Library/Fonts/");
     
     extern std::string os_Locale();
     std::string locale = os_Locale();
@@ -233,7 +234,7 @@ void gui_init()
     }
     else if (locale.find("zh-Hans") == 0)  // Simplified Chinese
     {
-        io.Fonts->AddFontFromFileTTF((fontDir + "regular.ttf").c_str(), 17.f * scaling, &font_cfg, GetGlyphRangesChineseSimplifiedOfficial());
+        io.Fonts->AddFontFromFileTTF((fontDir + "PingFang.ttc").c_str(), 17.f * scaling, &font_cfg, GetGlyphRangesChineseSimplifiedOfficial());
     }
 #elif defined(__ANDROID__)
     if (getenv("FLYCAST_LOCALE") != nullptr)
@@ -248,10 +249,10 @@ void gui_init()
         		|| locale.find("zh_HK") == 0)	// Traditional Chinese
         	glyphRanges = GetGlyphRangesChineseTraditionalOfficial();
         else if (locale.find("zh_CN") == 0)		// Simplified Chinese
-        	glyphRanges = GetGlyphRangesChineseFull();
+        	glyphRanges = GetGlyphRangesChineseSimplifiedOfficial();
 
         if (glyphRanges != nullptr)
-        	ImFont* font = io.Fonts->AddFontFromFileTTF("fonts/regular.ttf", 17.0f * scaling, &font_cfg, glyphRanges, GetGlyphRangesChineseFull());
+        	io.Fonts->AddFontFromFileTTF("/system/fonts/NotoSansCJK-Regular.ttc", 17.f * scaling, &font_cfg, glyphRanges);
     }
 
     // TODO Linux, iOS, ...
