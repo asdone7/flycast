@@ -102,7 +102,9 @@ void gui_init()
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
-	io.Fonts->AddFontFromFileTTF("regular.ttf", 15.0f, NULL, io.Fonts->GetGlyphRangesChineseFull());
+	//io.Fonts->AddFontFromFileTTF("regular.ttf", 15.0f, NULL, io.Fonts->GetGlyphRangesChineseFull());
+	ImFont* font = io.Fonts->AddFontFromFileTTF("regular.ttf", 15.0f, NULL, io.Fonts->GetGlyphRangesChineseFull());
+	IM_ASSERT(font != NULL);
 
 	io.IniFilename = NULL;
 
