@@ -110,6 +110,8 @@ static bool allow_service_buttons = false;
 
 static bool libretro_supports_bitmasks = false;
 
+static bool categoriesSupported = false;
+
 u32 kcode[4] = {0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF};
 u8 rt[4];
 u8 lt[4];
@@ -216,7 +218,7 @@ void retro_set_environment(retro_environment_t cb)
 {
 	environ_cb = cb;
 
-	libretro_set_core_options(environ_cb);
+	libretro_set_core_options(environ_cb, &categoriesSupported);
 
 	static const struct retro_controller_description ports_default[] =
 	{
@@ -329,6 +331,10 @@ static void set_variable_visibility()
 	environ_cb(RETRO_ENVIRONMENT_SET_CORE_OPTIONS_DISPLAY, &option_display);
 	option_display.key = CORE_OPTION_NAME "_per_content_vmus";
 	environ_cb(RETRO_ENVIRONMENT_SET_CORE_OPTIONS_DISPLAY, &option_display);
+
+	/* only show, if categories not supported */
+	option_display.visible = ((settings.platform.system == DC_PLATFORM_DREAMCAST)
+	                           && (!categoriesSupported));
 	option_display.key = CORE_OPTION_NAME "_show_vmu_screen_settings";
 	environ_cb(RETRO_ENVIRONMENT_SET_CORE_OPTIONS_DISPLAY, &option_display);
 
@@ -354,7 +360,9 @@ static void set_variable_visibility()
 		option_display.visible = true;
 		var.key = CORE_OPTION_NAME "_show_vmu_screen_settings";
 
-		if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+		if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var)
+			&& var.value
+			&& !categoriesSupported)
 			if (!strcmp(var.value, "disabled"))
 				option_display.visible = false;
 	}
@@ -380,11 +388,18 @@ static void set_variable_visibility()
 		environ_cb(RETRO_ENVIRONMENT_SET_CORE_OPTIONS_DISPLAY, &option_display);
 	}
 
+	/* only show, if categories not supported */
+	option_display.visible = !categoriesSupported;
+	option_display.key = CORE_OPTION_NAME "_show_lightgun_settings";
+	environ_cb(RETRO_ENVIRONMENT_SET_CORE_OPTIONS_DISPLAY, &option_display);
+
 	// Show/hide light gun options
 	option_display.visible = true;
 	var.key = CORE_OPTION_NAME "_show_lightgun_settings";
 
-	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var)
+		&& var.value
+		&& !categoriesSupported)
 		if (!strcmp(var.value, "disabled"))
 			option_display.visible = false;
 
@@ -947,14 +962,11 @@ static void extract_directory(char *buf, const char *path, size_t size)
 	strncpy(buf, path, size - 1);
 	buf[size - 1] = '\0';
 
-	char *base = strrchr(buf, '/');
-	if (!base)
-		base = strrchr(buf, '\\');
-
+	char *base = find_last_slash(buf);
 	if (base)
 		*base = '\0';
 	else
-		buf[0] = '\0';
+		strncpy(buf, ".", size - 1);
 }
 
 static uint32_t map_gamepad_button(unsigned device, unsigned id)
@@ -1349,11 +1361,10 @@ static void set_input_descriptors()
 
 static void extract_basename(char *buf, const char *path, size_t size)
 {
-	const char *base = strrchr(path, slash);
+	const char *base = find_last_slash(path);
 	if (!base)
 		base = path;
-
-	if (*base == slash)
+	else
 		base++;
 
 	strncpy(buf, base, size - 1);
@@ -1716,9 +1727,11 @@ bool retro_load_game_special(unsigned game_type, const struct retro_game_info *i
 void retro_unload_game()
 {
 	INFO_LOG(COMMON, "Flycast unloading game");
-	frontend_clear_thread_waits_cb(1, nullptr);
+	if (frontend_clear_thread_waits_cb != nullptr)
+		frontend_clear_thread_waits_cb(1, nullptr);
 	dc_stop();
-	frontend_clear_thread_waits_cb(0, nullptr);
+	if (frontend_clear_thread_waits_cb != nullptr)
+		frontend_clear_thread_waits_cb(0, nullptr);
 	free(game_data);
 	game_data = nullptr;
 	disk_paths.clear();
