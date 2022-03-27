@@ -1761,10 +1761,10 @@ static void gui_display_settings()
 		if (ImGui::BeginTabItem("关于"))
 		{
 			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, normal_padding);
-		    header("Flycast汉化版 by peng, 请勿商用, 严禁将本核心编译后使用在收费或者挂有募捐名义的项目中！！！ ");
+		    header("Flycast汉化版 by PENG, 严禁将本模拟器挂在任何EMUELEC整合包内 ！！！ ");
 		    {
-				ImGui::Text("版本: %s", GIT_VERSION);
-				ImGui::Text("Git 哈希: %s", GIT_HASH);
+				ImGui::Text("Flycast汉化版 BY PENG");
+				ImGui::Text("严禁将本模拟器挂在任何EMUELEC整合包内 ！！！");
 				ImGui::Text("构建日期: %s", BUILD_DATE);
 		    }
 	    	ImGui::Spacing();
@@ -1916,7 +1916,7 @@ static void gui_display_content()
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8 * scaling, 20 * scaling));		// from 8, 4
 
 		ImGui::PushID("bios");
-		if (ImGui::Selectable("Dreamcast BIOS | peng汉化, 请勿商用, 严禁将本核心编译后使用在收费或者挂有募捐名义的项目中！！！"))
+		if (ImGui::Selectable("Dreamcast BIOS | PENG 汉化 , 严禁将本模拟器挂在任何EMUELEC整合包内！！！"))
 		{
 			gui_state = GuiState::Closed;
 			gui_start_game("");
@@ -2032,7 +2032,7 @@ static void gui_network_start()
 	centerNextWindow();
 	ImGui::SetNextWindowSize(ImVec2(330 * scaling, 180 * scaling));
 
-	ImGui::Begin("##network", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
+	ImGui::Begin("##网络", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
 
 	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(20 * scaling, 10 * scaling));
 	ImGui::AlignTextToFramePadding();
@@ -2043,7 +2043,7 @@ static void gui_network_start()
 		if (networkStatus.get())
 		{
 			gui_state = GuiState::Closed;
-			ImGui::Text("STARTING...");
+			ImGui::Text("启动...");
 		}
 		else
 		{
@@ -2053,16 +2053,16 @@ static void gui_network_start()
 	}
 	else
 	{
-		ImGui::Text("STARTING NETWORK...");
+		ImGui::Text("启动网络...");
 		if (config::ActAsServer)
-			ImGui::Text("Press Start to start the game now.");
+			ImGui::Text("按Start开始游戏.");
 	}
 	ImGui::Text("%s", get_notification().c_str());
 
 	float currentwidth = ImGui::GetContentRegionAvail().x;
 	ImGui::SetCursorPosX((currentwidth - 100.f * scaling) / 2.f + ImGui::GetStyle().WindowPadding.x);
 	ImGui::SetCursorPosY(126.f * scaling);
-	if (ImGui::Button("Cancel", ImVec2(100.f * scaling, 0.f)))
+	if (ImGui::Button("取消", ImVec2(100.f * scaling, 0.f)))
 	{
 		naomiNetwork.terminate();
 		networkStatus.get();
@@ -2082,7 +2082,7 @@ static void gui_display_loadscreen()
 	centerNextWindow();
 	ImGui::SetNextWindowSize(ImVec2(330 * scaling, 180 * scaling));
 
-    ImGui::Begin("##loading", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
+    ImGui::Begin("##加载", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
 
     ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(20 * scaling, 10 * scaling));
     ImGui::AlignTextToFramePadding();
