@@ -102,7 +102,7 @@ void gui_init()
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
-	io.Fonts->AddFontFromFileTTF("regular.ttf", 15.0f, NULL, io.Fonts->GetGlyphRangesChineseFull());
+	io.Fonts->AddFontFromFileTTF("/storage/.config/emulationstation/themes/Crystal/_inc/fonts/OpenSans-Light.ttf", 15.0f, NULL, io.Fonts->GetGlyphRangesChineseFull());
 
 	io.IniFilename = NULL;
 
@@ -1233,13 +1233,13 @@ static void gui_display_settings()
 #ifdef __ANDROID__
 					if (gamepad->is_virtual_gamepad())
 					{
-						if (ImGui::Button("Edit"))
+						if (ImGui::Button("编辑"))
 						{
 							vjoy_start_editing();
 							gui_state = GuiState::VJoyEdit;
 						}
 						ImGui::SameLine();
-						OptionSlider("Haptic", config::VirtualGamepadVibration, 0, 60);
+						OptionSlider("触摸", config::VirtualGamepadVibration, 0, 60);
 					}
 #endif
 					ImGui::NextColumn();
